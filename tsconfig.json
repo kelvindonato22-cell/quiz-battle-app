@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-native",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "composite": false
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "App.tsx",
+    "MatchmakingBattleApp.tsx"
+  ],
+  "exclude": [
+    "node_modules/**/*",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js",
+    "expo-env.d.ts"
+  ],
+  "extends": "expo/tsconfig.base"
+}

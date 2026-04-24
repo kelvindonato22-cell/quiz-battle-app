@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Quiz Battle",
+    "slug": "quiz-battle",
+    "version": "1.0.0",
+    "sdkVersion": "52.0.0",
+    "entryPoint": "node_modules/expo/AppEntry.js",
+    "platforms": ["ios", "android", "web"],
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
