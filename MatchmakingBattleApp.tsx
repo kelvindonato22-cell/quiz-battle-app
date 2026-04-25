@@ -10,6 +10,7 @@ import MatchmakingScreen from './components/MatchmakingScreen';
 import BattleQuizCard from './components/BattleQuizCard';
 import BattleResult from './components/BattleResult';
 import PeerConnection from './components/PeerConnection';
+import GameProgress from './components/GameProgress';
 import { useBattleTimer } from './hooks/useBattleTimer';
 
 type Screen = 'HOME' | 'RANKING' | 'MATCHMAKING' | 'ROUND' | 'RESULT';
@@ -425,6 +426,14 @@ export default function MatchmakingBattleApp() {
               isConnected={true}
               opponentName={opponent?.name || 'Unknown'}
               latency={Math.floor(Math.random() * 50) + 10}
+            />
+            
+            <GameProgress
+              gameCount={fsm.getContext().gameCount}
+              currentPlayerWins={fsm.getContext().currentPlayerWins}
+              opponentWins={fsm.getContext().opponentWins}
+              currentRound={fsm.getContext().currentRound}
+              totalRounds={fsm.getContext().totalRounds}
             />
             
             <View style={styles.scoreBoard}>

@@ -8,6 +8,7 @@ import RankingScreen from './components/RankingScreen';
 import BattleLobby from './components/BattleLobby';
 import BattleQuizCard from './components/BattleQuizCard';
 import BattleResult from './components/BattleResult';
+import GameProgress from './components/GameProgress';
 import { useBattleTimer } from './hooks/useBattleTimer';
 
 type Screen = 'HOME' | 'RANKING' | 'LOBBY' | 'MATCHMAKING' | 'ROUND' | 'RESULT';
@@ -330,21 +331,16 @@ export default function HomeBattleApp() {
         );
         
       case 'ROUND':
-        if (matchResult) {
-          return (
-            <BattleResult
-              winner={matchResult.winner}
-              loser={matchResult.loser}
-              matchResult={matchResult}
-              onPlayAgain={handlePlayAgain}
-              onReturnToLobby={handleReturnToLobby}
-              seriesStatus={fsm.getSeriesStatus()}
-            />
-          );
-        }
-        
         return (
           <View style={styles.gameContainer}>
+            <GameProgress
+              gameCount={fsm.getContext().gameCount}
+              currentPlayerWins={fsm.getContext().currentPlayerWins}
+              opponentWins={fsm.getContext().opponentWins}
+              currentRound={fsm.getContext().currentRound}
+              totalRounds={fsm.getContext().totalRounds}
+            />
+            
             <View style={styles.scoreBoard}>
               <View style={styles.playerScore}>
                 <Text style={styles.playerName}>{currentPlayer?.name}</Text>
@@ -371,8 +367,10 @@ export default function HomeBattleApp() {
               onUseLifeline={handleUseLifeline}
               eliminatedOptions={eliminatedOptions}
               showCorrection={showCorrection}
-              correctAnswer={currentQuestion?.correct || undefined}
-              selectedAnswer={selectedAnswer || undefined}
+              correctAnswer={currentQuestion?.correct}
+              selectedAnswer={selectedAnswer}
+              currentStreak={currentPlayer?.streak || 0}
+              onBack={handleReturnToLobby}
             />
           </View>
         );

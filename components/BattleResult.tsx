@@ -240,19 +240,48 @@ export default function BattleResult({
         {/* Series Status */}
         {seriesStatus && (
           <View style={styles.seriesContainer}>
-            <Text style={styles.seriesTitle}>Series Status</Text>
+            <View style={styles.seriesHeader}>
+              <Text style={styles.seriesTitle}>Series Progress</Text>
+              <View style={styles.gameCounter}>
+                <Text style={styles.gameCounterText}>
+                  {seriesStatus.gameCount === 1 ? '1️⃣' : seriesStatus.gameCount === 2 ? '2️⃣' : '3️⃣'} Game {seriesStatus.gameCount}/3
+                </Text>
+              </View>
+            </View>
+            
+            {/* Progress Dots */}
+            <View style={styles.progressDots}>
+              {[1, 2, 3].map((gameNum) => (
+                <View 
+                  key={gameNum} 
+                  style={[
+                    styles.progressDot, 
+                    gameNum <= seriesStatus.gameCount ? styles.completedDot : styles.incompleteDot
+                  ]}
+                >
+                  <Text style={[
+                    styles.progressDotText,
+                    gameNum <= seriesStatus.gameCount ? styles.completedDotText : styles.incompleteDotText
+                  ]}>
+                    {gameNum}
+                  </Text>
+                </View>
+              ))}
+            </View>
+            
             <View style={styles.seriesScore}>
-              <Text style={styles.seriesScoreText}>
-                Game {seriesStatus.gameCount}/3
-              </Text>
               <Text style={styles.seriesWinsText}>
                 You: {seriesStatus.currentPlayerWins} - Opponent: {seriesStatus.opponentWins}
               </Text>
             </View>
+            
             {seriesStatus.seriesWinner && (
               <View style={styles.seriesWinnerContainer}>
                 <Text style={styles.seriesWinnerText}>
                   🏆 {seriesStatus.seriesWinner.id === 'current' ? 'You won the series!' : 'Opponent won the series!'}
+                </Text>
+                <Text style={styles.seriesFinalScore}>
+                  Final Score: {seriesStatus.currentPlayerWins} - {seriesStatus.opponentWins}
                 </Text>
               </View>
             )}
@@ -270,14 +299,32 @@ export default function BattleResult({
             </TouchableOpacity>
           )}
           
-          <TouchableOpacity
-            style={[styles.button, seriesStatus?.canPlayAgain ? styles.lobbyButtonSecondary : styles.lobbyButton]}
-            onPress={onReturnToLobby}
-          >
-            <Text style={styles.buttonText}>
-              {seriesStatus?.seriesWinner ? '🏠 End Series' : '🏠 Return to Lobby'}
-            </Text>
-          </TouchableOpacity>
+          {seriesStatus?.seriesWinner ? (
+            <View style={styles.seriesEndActions}>
+              <TouchableOpacity
+                style={[styles.button, styles.newSeriesButton]}
+                onPress={onReturnToLobby}
+              >
+                <Text style={styles.buttonText}>🔄 New Series</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[styles.button, styles.findNewOpponentButton]}
+                onPress={onReturnToLobby}
+              >
+                <Text style={styles.buttonText}>👥 Find New Opponent</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={[styles.button, seriesStatus?.canPlayAgain ? styles.lobbyButtonSecondary : styles.lobbyButton]}
+              onPress={onReturnToLobby}
+            >
+              <Text style={styles.buttonText}>
+                🏠 Return to Lobby
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </Animated.View>
     </ScrollView>
@@ -520,11 +567,13 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     gap: 12,
+    alignItems: 'center',
   },
   button: {
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
+    minWidth: 200,
   },
   playAgainButton: {
     backgroundColor: '#10b981',
@@ -534,6 +583,17 @@ const styles = StyleSheet.create({
   },
   lobbyButtonSecondary: {
     backgroundColor: '#64748b',
+  },
+  seriesEndActions: {
+    gap: 12,
+    alignItems: 'center',
+    width: '100%',
+  },
+  newSeriesButton: {
+    backgroundColor: '#6366f1',
+  },
+  findNewOpponentButton: {
+    backgroundColor: '#f59e0b',
   },
   buttonText: {
     color: 'white',
@@ -551,12 +611,56 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
+  seriesHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   seriesTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1e293b',
+  },
+  gameCounter: {
+    backgroundColor: '#6366f1',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  gameCounterText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  progressDots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 12,
     marginBottom: 16,
-    textAlign: 'center',
+  },
+  progressDot: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  completedDot: {
+    backgroundColor: '#10b981',
+  },
+  incompleteDot: {
+    backgroundColor: '#e2e8f0',
+  },
+  progressDotText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  completedDotText: {
+    color: 'white',
+  },
+  incompleteDotText: {
+    color: '#64748b',
   },
   seriesScore: {
     alignItems: 'center',
@@ -571,6 +675,11 @@ const styles = StyleSheet.create({
   seriesWinsText: {
     fontSize: 14,
     color: '#64748b',
+  },
+  seriesFinalScore: {
+    fontSize: 12,
+    color: '#64748b',
+    marginTop: 4,
   },
   seriesWinnerContainer: {
     alignItems: 'center',

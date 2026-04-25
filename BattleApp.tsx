@@ -6,6 +6,7 @@ import { quizService } from './services/quizService';
 import BattleLobby from './components/BattleLobby';
 import BattleQuizCard from './components/BattleQuizCard';
 import BattleResult from './components/BattleResult';
+import GameProgress from './components/GameProgress';
 import { useBattleTimer } from './hooks/useBattleTimer';
 
 const { width } = Dimensions.get('window');
@@ -296,6 +297,14 @@ export default function BattleApp() {
         
         return (
           <View style={styles.gameContainer}>
+            <GameProgress
+              gameCount={fsm.getContext().gameCount}
+              currentPlayerWins={fsm.getContext().currentPlayerWins}
+              opponentWins={fsm.getContext().opponentWins}
+              currentRound={fsm.getContext().currentRound}
+              totalRounds={fsm.getContext().totalRounds}
+            />
+            
             <View style={styles.scoreBoard}>
               <View style={styles.playerScore}>
                 <Text style={styles.playerName}>{currentPlayer?.name}</Text>
