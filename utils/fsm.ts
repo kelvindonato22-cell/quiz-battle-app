@@ -163,17 +163,20 @@ export class QuizBattleFSM {
             this.transition('GAME_OVER', {
               winner: payload?.winner
             });
+            // Update series result immediately when game ends
+            this.updateSeriesResult(payload?.winner);
           }
         } else if (type === 'GAME_OVER') {
           this.transition('GAME_OVER', {
             winner: payload?.winner
           });
+          // Update series result immediately when game ends
+          this.updateSeriesResult(payload?.winner);
         }
         break;
 
       case 'GAME_OVER':
         if (type === 'PLAY_AGAIN') {
-          this.updateSeriesResult(this.context.winner);
           if (this.canPlayAgain()) {
             this.prepareNextGame();
             this.transition('START_GAME');

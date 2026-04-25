@@ -130,7 +130,8 @@ export default function MatchmakingBattleApp() {
   }, [fsm, players, currentPlayer, opponent]);
 
   const loadNewQuestion = () => {
-    const question = quizService.getRandomQuestion();
+    const currentRound = fsm.getContext().currentRound;
+    const question = quizService.getQuestionForRound(currentRound);
     setCurrentQuestion(question);
     setSelectedAnswer(null);
     setShowCorrection(false);
@@ -166,6 +167,7 @@ export default function MatchmakingBattleApp() {
 
   const handleMatchFound = (foundOpponent: Player) => {
     setOppponent(foundOpponent);
+    quizService.resetGame(); // Reset used questions for new game
     
     // Start matchmaking
     fsm.handleEvent({
@@ -189,6 +191,7 @@ export default function MatchmakingBattleApp() {
 
   const handleDirectGame = (directOpponent: Player) => {
     setOppponent(directOpponent);
+    quizService.resetGame(); // Reset used questions for new game
     
     // Immediate direct game
     fsm.handleEvent({
@@ -375,8 +378,10 @@ export default function MatchmakingBattleApp() {
     setCurrentQuestion(null);
     setMatchResult(null);
     
-    // Reset to lobby state and go to home
-    fsm.reset();
+    // Reset series and go to home
+    fsm.handleEvent({
+      type: 'RESET_SERIES'
+    });
     setCurrentScreen('HOME');
   };
 
@@ -468,6 +473,7 @@ export default function MatchmakingBattleApp() {
             opponentPoints={matchResult.opponentPoints || opponent?.score || 0}
             playerStreak={matchResult.playerStreak || currentPlayer?.streak || 0}
             opponentStreak={matchResult.opponentStreak || opponent?.streak || 0}
+            seriesStatus={fsm.getSeriesStatus()}
           />
         ) : null;
         
